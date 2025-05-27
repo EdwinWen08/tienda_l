@@ -1,35 +1,12 @@
-<html>
-    <head>
-        <title>TechShop</title>
-        <meta charset="UTF-8"> 
-        <link href="/css/estilos.css" rel="stylesheet" type="text/css"/>
+<html xlmns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"> 
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>TechShop</title> 
     </head> 
     <body> 
-        <header>
-            <nav>
-                <a class="logo nav-link" href="/">TechShop</a> 
-                <ul class="nav-menu"> 
-                    <li class="nav-menu-item"><a class="nav-link" href="/ejemplo2">Mis Autos</a></li>
-                    <li class="nav-menu-item"><a class="nav-link" href="/multimedia">Multimedia</a></li>
-                    <li class="nav-menu-item"><a class="nav-link" href="/iframes">iFrames</a></li>
-                </ul>
-            </nav>        
-        </header>
+        <header th:replace="~{layout/plantilla :: header}"/>
 
-        <aside>
-            <h2>Index</h2>
-            <p>Uso de etiquetas basicas en un sitio web</p>
-        </aside>
-        <section>
-            <h2> Su tienda en línea</h2> 
-            <p>Bienvenidos a la mejor tienda de cualquier producto que desee, aceptamos todo tipo de tarjetas, cero estafas y envíos a todo el país por correos de costa rica</p>     
-        </section>
-        <footer>
-            TechShop 2025 &COPY; Todos los derechos reservados
-        </footer>
-
-
-
-
+        <footer th:replace="~{layout/plantilla :: footer}"/>
          </body>
 </html>
