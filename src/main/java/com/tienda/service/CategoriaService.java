@@ -9,22 +9,37 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoriaService {
-    
-    //Se usa para crear automaticamente una unica instancia de clase.
-    @Autowired
+
+    @Autowired  //Se usa para crear automaticamente una unica intancia esta clase o elemento
     private CategoriaRepository categoriaRepository;
-    
-    //Se usa para indiciar que se hara una transaccion a una base de datos de solo lectura.
-    @Transactional(readOnly=true)
-    public List<Categoria> getCategorias(boolean activos) {
-        //Se usa "activos" si se desea limitar la vista a solo las categorias activas.
-        var lista=categoriaRepository.findAll();
-        
-        if (activos) { //Si solo se quieren los registros de categorias activas.
-            lista.removeIf(e -> !e.isActivo());
+
+    @Transactional(readOnly = true) //Se usa para indicar que se hara una transaccion a una BD de solo lectura
+    public List<Categoria> getCategorias(boolean activos) { //Devuelve arraylist con registros de la consulta
+        //Se usa "activos" si se desea limitar la vista a solo las categorias activas
+        var lista = categoriaRepository.findAll(); //Devuelve lista de categoria, porque en repositorio le dijimos
+
+        if (activos) { //Si solo se quieren los registros de categorias activas
+            lista.removeIf(e -> !e.isActivo()); //Borrar registros cat inactivas, e los elementos...
         }
-        
+
         return lista;
     }
-    
+
+    @Transactional(readOnly = true)
+    public Categoria getCategoria(Categoria categoria) {
+        
+        return categoriaRepository
+                .findById(categoria.getIdCategoria())
+                .orElse(null);
+    }
+
+    @Transactional
+    public void save(Categoria categoria) {
+        categoriaRepository.save(categoria);
+    }
+
+    @Transactional
+    public void delete(Categoria categoria) {
+        categoriaRepository.delete(categoria);
+    }
 }

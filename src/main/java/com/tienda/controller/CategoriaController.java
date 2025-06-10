@@ -1,26 +1,49 @@
-package com.tienda.controller;
+package com.tienda.controller; //No como add view controller > controlador para ruta categoria/listado, gestiona consultas que empiezan con /categoria
 
+import com.tienda.domain.Categoria;
 import com.tienda.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/categoria")
+@RequestMapping("/categoria") //todo este mapeo se gestiona en esta clase
 public class CategoriaController {
-    
+
     @Autowired
     private CategoriaService categoriaService;
-    
+
     @GetMapping("/listado")
-    public String listado(Model model) {
-        var lista = categoriaService.getCategorias(false);
-                
-        model.addAttribute("categorias", lista);
-        
-        
-        return "categoria/listado";
+    public String listado(Model model) { //Se ejecuta cuando llega a ruta
+        var lista = categoriaService.getCategorias(false); //Obtener lista categorias
+
+        model.addAttribute("categorias", lista); //Para pasar info de programacion a listado (atributo,arraylist)
+
+        return "/categoria/listado"; //Devolviendo pagina listado en folder categoria
+    }
+
+    @PostMapping("/guardar")
+    public String guardar(Categoria categoria,
+            @RequestParam("imagenFile") MultipartFile imagenFile) {
+        categoriaService.save(categoria);
+        return "redirect:/categoria/listado";
+    }
+
+    @GetMapping("/eliminar/{idCategoria}")
+    public String eliminar(Categoria categoria) {
+        categoriaService.delete(categoria);
+        return "redirect:/categoria/listado";
+    }
+
+    @GetMapping("/modificar/{idCategoria}")
+    public String modificar(Categoria categoria, Model model) {
+        categoria=categoriaService.getCategoria(categoria);
+        model.addAttribute("categoria", categoria);
+        return "/categoria/modifica";
     }
 }
