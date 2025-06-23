@@ -27,7 +27,7 @@ public class CategoriaService {
 
     @Transactional(readOnly = true)
     public Categoria getCategoria(Categoria categoria) {
-        
+
         return categoriaRepository
                 .findById(categoria.getIdCategoria())
                 .orElse(null);
@@ -39,7 +39,13 @@ public class CategoriaService {
     }
 
     @Transactional
-    public void delete(Categoria categoria) {
-        categoriaRepository.delete(categoria);
+    public boolean delete(Categoria categoria) {
+        try {
+            categoriaRepository.delete(categoria);
+            categoriaRepository.flush();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
