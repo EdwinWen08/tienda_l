@@ -73,7 +73,7 @@ public class ProductoController {
         return "redirect:/producto/listado";
     }
 
-    @GetMapping("/modificar/{idProducto}")
+@PostMapping("/modificar")
     public String modificar(Producto producto, Model model) {
         producto = productoService.getProducto(producto);
         model.addAttribute("producto", producto);

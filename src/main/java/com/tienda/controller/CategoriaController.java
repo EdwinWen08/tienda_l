@@ -73,7 +73,7 @@ public class CategoriaController {
         return "redirect:/categoria/listado";
     }
 
-    @GetMapping("/modificar/{idCategoria}")
+    @PostMapping("/modificar")
     public String modificar(Categoria categoria, Model model) {
         categoria = categoriaService.getCategoria(categoria);
         model.addAttribute("categoria", categoria);

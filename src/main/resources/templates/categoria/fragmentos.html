@@ -90,19 +90,26 @@
                                             </td>
                                             <td th:text="${c.activo} ? 'Activa' : 'Inactiva'"></td>
                                             <td>
-                                                <button type="button"
-                                                        class="btn btn-danger"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#confirmModal"
-                                                        th:data-bs-id="${c.idCategoria}"
-                                                        th:data-bs-descripcion="${c.descripcion}">
-                                                    <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
-                                                </button>
-
-                                                <a class='btn btn-success'
-                                                   th:href='@{/categoria/modificar/}+${c.idCategoria}'>
-                                                    <i class="fa-solid fa-pen"></i> [[#{accion.actualizar}]]
-                                                </a>
+                                                <div class="d=flex align-items-start">
+                                                    <button type="button"
+                                                            class="btn btn-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#confirmModal"
+                                                            th:data-bs-id="${c.idCategoria}"
+                                                            th:data-bs-descripcion="${c.descripcion}">
+                                                        <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                                    </button>
+                                                    <form method="post"
+                                                          th:action="@{/categoria/modificar}"
+                                                          th:object="${categoria}">
+                                                        <input type="hidden" name="idCategoria"
+                                                               th:value="${c.idCategoria}"/>
+                                                        <button type="submit"
+                                                                class="btn btn-success">
+                                                            <i class="fa=solid fa-pencil"></i> [[#{accion.actualizar}]]
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -187,7 +194,7 @@
             </div>
         </section>
 
-<section th:fragment="confirmarEliminar">
+        <section th:fragment="confirmarEliminar">
             <div class="modal fade" 
                  id="confirmModal" 
                  tabindex="-1" 
