@@ -32,17 +32,16 @@ public class PruebasController {
         var lista = productoService.getProductos(false);
         model.addAttribute("productos", lista);
 
-        var categorias = categoriaService.getCategorias(true);
+        var categorias = categoriaService.getCategorias(true); //Ocupamos inyectar las categorias y usar en agregar producto (seleccionar)
         model.addAttribute("categorias", categorias);
 
         return "/pruebas/listado";
     }
 
-    @GetMapping("/listado/{idCategoria}")
-    public String listado(Categoria categoria,Model model) {
-        categoria=categoriaService.getCategoria(categoria);
-        
-        
+    @GetMapping("/listado/{idCategoria}") //Hacer filtrado de prod en las categorias
+    public String listado(Categoria categoria, Model model) {
+        categoria = categoriaService.getCategoria(categoria); //Recuperar registro cat completo
+
         model.addAttribute("productos", categoria.getProductos());
 
         var categorias = categoriaService.getCategorias(true);
@@ -50,5 +49,40 @@ public class PruebasController {
 
         return "/pruebas/listado";
     }
-//Semana8
+
+    @GetMapping("/listado2") //Al hacer click en consultas en la web
+    public String listado2(Model model) {
+        var lista = productoService.getProductos(false);
+        model.addAttribute("productos", lista);
+
+        return "/pruebas/listado2";
+    }
+
+    @PostMapping("/query1") //Al hacer click en consultas en la web
+    public String consulta1(@RequestParam() double precioInf, @RequestParam() double precioSup, Model model) {
+        var lista = productoService.query1(precioInf, precioSup);
+        model.addAttribute("productos", lista);
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        return "/pruebas/listado2";
+    }
+
+    @PostMapping("/query2") //Al hacer click en consultas en la web
+    public String consulta2(@RequestParam() double precioInf, @RequestParam() double precioSup, Model model) {
+        var lista = productoService.query2(precioInf, precioSup);
+        model.addAttribute("productos", lista);
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        return "/pruebas/listado2";
+    }
+
+    @PostMapping("/query3") //Al hacer click en consultas en la web
+    public String consulta3(@RequestParam() double precioInf, @RequestParam() double precioSup, Model model) {
+        var lista = productoService.query3(precioInf, precioSup);
+        model.addAttribute("productos", lista);
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        return "/pruebas/listado2";
+    }
+
 }
