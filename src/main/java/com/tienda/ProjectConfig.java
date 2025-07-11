@@ -119,4 +119,5 @@ public class ProjectConfig implements WebMvcConfigurer {
         return new InMemoryUserDetailsManager(user, sales, admin);
     }
 
+    //SEMANA 9
 }
