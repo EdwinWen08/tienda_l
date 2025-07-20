@@ -13,7 +13,11 @@
             <div class="row py-4 mb-2 bg-light">
                 <div class="col-md-1"></div>
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarCategoria">
+                    <button type="button" 
+                            sec:authorize="hasRole('ROLE_ADMIN')"
+                            class="btn btn-primary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregarCategoria">
                         <i class="fas fa-plus"></i> [[#{categoria.agregar}]]
                     </button>
                 </div>
@@ -89,7 +93,7 @@
                                                 <img th:src="@{${c.rutaImagen}}" alt=".." height="75" />
                                             </td>
                                             <td th:text="${c.activo} ? 'Activa' : 'Inactiva'"></td>
-                                            <td>
+                                            <td sec:authorize="hasRole('ROLE_ADMIN')">
                                                 <div class="d=flex align-items-start">
                                                     <button type="button"
                                                             class="btn btn-danger"

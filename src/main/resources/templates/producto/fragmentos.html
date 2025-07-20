@@ -10,6 +10,7 @@
                 <div class="col-md-1"></div>
                 <div class="col-md-3">
                     <button type="button" 
+                            sec:authorize="hasRole('ROLE_ADMIN')"
                             class="btn btn-primary" 
                             data-bs-toggle="modal" 
                             data-bs-target="#agregarProducto">
@@ -129,7 +130,7 @@
                                             <td>[[${p.categoria.descripcion}]]</td>
                                             <td><img th:src="@{${p.rutaImagen}}" alt=".." height="75"/></td>
                                             <td th:text="${p.activo} ? 'Activa' : 'Inactiva'"></td>
-                                            <td>
+                                            <td sec:authorize="hasRole('ROLE_ADMIN')">
                                                 <div class="d-flex align-items-start">
                                                     <button type="button"
                                                             class="btn btn-danger"
