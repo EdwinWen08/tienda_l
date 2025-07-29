@@ -1,3 +1,18 @@
+function addCart(formulario) {
+    var idProducto=formulario.elements[0].value;
+    var existencias=formulario.elements[1].value;
+    if (existencias>0) {
+        var ruta="/carrito/agregar/"+idProducto;
+        //window.alert("La ruta va ser ["+ruta+"]"); Para ver rutas de productos
+        $("#resultBlock").load(ruta);
+    } else {
+        window.alert("No hay existencias.....");
+    }
+}
+
+
+
+
 function mostrarImagen(input) {
 
     if (input.files && input.files[0]) {
