@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>TechShop</title>
+    </head>
+    <body>
+
+        <!-- Boton y ventana modal para agregar constantes -->
+        <section th:fragment="agregarConstante"> <!-- Define un fragmento reutilizable -->
+
+            <div class="row py-4 mb-2 bg-light"> <!-- Contenedor con clases de Bootstrap para fila con padding y margen y fondo claro -->
+                <div class="col-md-1"></div> <!-- Columna vacía para espaciado en pantalla mediana -->
+                <div class="col-md-3"> 
+                    <button type="button" 
+                            sec:authorize="hasRole('ROLE_ADMIN')" 
+                            class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarConstante"> <!--  Al hacer clic abre el modal con id 'agregarConstante' -->             
+                        <i class="fas fa-plus"></i> [[#{constante.agregar}]] 
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal para agregar constantes -->
+            <div class="modal fade" id="agregarConstante" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">  <!-- Ventana modal Bootstrap con id 'agregarConstante', inicialmente oculta, accesible por teclado y con etiqueta accesible -->     
+                <div class="modal-dialog"> 
+                    <div class="modal-content"> <!-- Contenido del modal -->
+                        <div class="modal-header bg-info text-white"> <!-- Encabezado del modal con fondo azul claro y texto blanco -->
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                <i class="fa-solid fa-layer-group"></i> [[#{constante.agregar}]]
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+
+                        <form th:action="@{/constante/guardar}" 
+                              th:object="${constante}" 
+                              method="post" 
+                              class="was-validated" 
+                              enctype="multipart/form-data">
+                            <div class="modal-body"> 
+                                <div class="mb-3"> 
+                                    <label>[[#{constante.atributo}]]</label> 
+                                    <input type="text" name="atributo" required="true" class="form-control"/>                            
+                                </div>                              
+                            </div>
+
+                            <div class="modal-body"> 
+                                <div class="mb-3"> 
+                                    <label>[[#{constante.descripcion}]]</label> 
+                                    <input type="text" name="valor" required="true" class="form-control"/>                             
+                                </div>                              
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa-solid fa-floppy-disk"></i> [[#{accion.guardar}]]
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section th:fragment="listado" class="p-3">
+
+
+            <div class="row p-3">
+
+
+                <div class="col-md-9">
+
+
+                    <div class="card p-2">
+
+
+                        <div class="card-header">
+                            <h4>[[#{constante.listado}]]</h4>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${constantes != null and !constantes.empty}">
+                                <table class="table table-striped table-hover">
+
+
+                                    <thead> 
+                                        <tr> 
+                                            <th>#</th> 
+                                            <th>[[#{constante.atributo}]]</th> 
+                                            <th>[[#{constante.valor}]]</th> 
+                                        </tr>
+                                    </thead>
+
+
+                                    <tbody>
+
+                                        <tr th:each="c : ${constantes}">
+
+                                            <td>[[${c.idConstante}]]</td>
+                                            <td>[[${c.atributo}]]</td>
+                                            <td>[[${c.valor}]]</td>
+
+                                            <td sec:authorize="hasRole('ROLE_ADMIN')">                                              
+                                                <div class="d-flex align-items-start">
+                                                    <button type="button"
+                                                            class="btn btn-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#confirmModal"
+                                                            th:data-bs-id="${c.idConstante}" 
+                                                            th:data-bs-descripcion="${c.atributo}">                        
+                                                        <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]                                                                                                                              
+                                                    </button>
+
+                                                    <form method="post"
+                                                          th:action="@{/constante/modificar}"
+                                                          th:object="${constante}">
+                                                        <input type="hidden" name="idConstante"
+                                                               th:value="${c.idConstante}"/>
+                                                        <button type="submit"
+                                                                class="btn btn-success">
+                                                            <i class="fa-solid fa-pencil"></i> [[#{accion.actualizar}]]
+                                                        </button>
+                                                    </form>
+
+                                                </div>
+
+
+                                            </td>
+                                        </tr>
+                                                </tbody>
+                                </table>
+                            </div>
+                            <div th:if="${constantes == null or constantes.empty}"> 
+                                <h2>[[#{lista.vacia}]]</h2>
+                            </div>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </section>
+
+
+        <section th:fragment="editarConstante">
+
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8"> 
+
+                    <form method="POST"
+                          th:action="@{/constante/guardar}"
+                          th:object="${constante}"
+                          class="was-validated"
+                          enctype="multipart/form-data">
+
+                        <input type="hidden" name="idConstante" th:field="*{idConstante}"/> 
+                        <div class="container py-4 mb-4 bg-light"> 
+
+                            <div class="row"> 
+                                <div class="col-md-4 d-grid">
+                                    <a th:href="@{/constante/listado}" class="btn btn-primary">
+                                        <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                                    </a>
+                                </div>
+
+                                <div class="col-md-4 d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="details"> 
+                            <div class="container"> 
+                                <div class="row">
+                                    <div class="col">
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4>[[#{accion.actualizar}]]</h4>
+                                            </div>
+                                            <div class="card-body">
+
+                                                <div class="mb-3">
+                                                    <label for="descripcion">[[#{constante.atributo}]]</label>
+                                                    <input type="text" class="form-control"
+                                                           name="atributo" th:field="*{atributo}"
+                                                           required="true"/>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="descripcion">[[#{constante.valor}]]</label>
+                                                    <input type="text" class="form-control"
+                                                           name="valor" th:field="*{valor}"
+                                                           required="true"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form> 
+                </div>
+            </div>
+        </section>    
+
+        <!-- Fragmento para crear ventana modal -->      
+        <section th:fragment="confirmarEliminar">
+            <div class="modal fade" 
+                 id="confirmModal" <!-- Nombre del btn que dimos en target -->
+                 tabindex="-1" 
+                 aria-labelledby="modalLabel" 
+                 aria-hidden="true">
+                 <div class="modal-dialog modal-dialog-centered custom-modal-animation">
+                    <div class="modal-content animate-slide-up">
+                        <form th:action="@{/constante/eliminar}" th:object="${constante}" method="post"> <!-- Se va eliminar usando un obj constante -->
+                            <input type="hidden" name="idConstante" id="modalId"/>
+                            <div class="modal-header bg-warning text-white">
+                                <h5 class="modal-title" id="modalLabel">
+                                    <i class="fa-solid fa-circle-radiation"></i> [[#{accion.confirmar}]]</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>[[#{accion.confirmar.texto1}]] <span id="modalDescripcion"></span>?</p>
+                                <h6>[[#{accion.confirmar.texto2}]]</h6>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]</button>                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </body>
+
+</html>
